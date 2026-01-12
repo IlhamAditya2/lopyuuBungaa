@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Special For You</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sour+Gummy:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- CSS YANG SUDAH DISESUAIKAN --- */
+        @import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Sour+Gummy:ital,wght@0,100..900;1,100..900&display=swap");
+
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            font-family: "Sour Gummy", serif;
+        }
+
+        :root {
+            --btn-color: #805557;
+        }
+
+        body {
+            background: blanchedalmond;
+            overflow: hidden;
+        }
+
+        .main {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            top: 0;
+            padding-top: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: sans-serif;
+            overflow: hidden;
+
+
+        }
+
+        .elements {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            top: 0;
+            background-position: center;
+            z-index: -1;
+        }
+
+        .elements>img {
+            position: absolute;
+        }
+
+        .bg {
+            height: 100%;
+            width: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        .butterfly {
+            position: absolute;
+            transform: rotateZ(-15deg);
+            top: 0px !important;
+            left: 10px !important;
+        }
+
+        .butterfly img {
+            width: 180px;
+            animation: butterfly 1s ease infinite;
+        }
+
+        .flower {
+            width: 150px !important;
+            bottom: -10px;
+            right: 2px;
+            animation: flower 2s ease-in-out infinite;
+            transform-origin: bottom center;
+        }
+
+        @keyframes butterfly {
+
+            0%,
+            100% {
+                transform: scaleX(1);
+            }
+
+            50% {
+                transform: scaleX(0.6);
+            }
+        }
+
+        @keyframes flower {
+
+            0%,
+            100% {
+                transform: rotateZ(-3deg) skewX(2deg);
+            }
+
+            50% {
+                transform: rotateZ(3deg);
+            }
+        }
+
+        /* Book */
+        .book {
+            position: relative;
+            width: 44.5vw;
+            margin: 0;
+            max-width: 320px;
+            aspect-ratio: 360/540;
+            transition: all 0.5s linear;
+            border-radius: 2px 10px 10px 2px;
+            box-shadow: -10px 7px 15px rgba(0, 0, 0, 0);
+        }
+
+        .book .paper:nth-child(1) {
+            transition: box-shadow 0.5s linear;
+            box-shadow: -6px 5px 12px rgba(0, 0, 0, 0);
+            border-radius: 2px 10px 10px 2px;
+        }
+
+        .book.fs .paper:nth-child(1) {
+            box-shadow: -6px 5px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        .book .paper:last-child .back::after {
+            position: absolute;
+            content: "";
+            height: 100%;
+            width: 100%;
+            top: 0;
+            transition: box-shadow 0.5s linear;
+            box-shadow: 6px 5px 12px rgba(0, 0, 0, 0);
+            border-radius: 2px 10px 10px 2px;
+        }
+
+        .book.bs .paper:last-child .back::after {
+            box-shadow: 6px 5px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        .paper {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            perspective: 1500px;
+            perspective-origin: left;
+            transform-style: preserve-3d;
+        }
+
+        .front,
+        .back {
+            background: white;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            transform-origin: left;
+            transition: all 0.5s linear;
+            background-image: linear-gradient(-100deg, rgba(0, 0, 0, 0.5), white);
+            border-radius: 2px 10px 10px 2px;
+            border-right: 2px solid white;
+        }
+
+        .front {
+            z-index: 2;
+            backface-visibility: hidden;
+            overflow: hidden;
+        }
+
+        .back {
+            z-index: 1;
+            /* backface-visibility: hidden; */
+        }
+
+        .front-content,
+        .back-content {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-size: cover;
+            background-image: linear-gradient(90deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2)), var(--bg);
+            background-size: cover;
+            background-position: right;
+            background-position: -100%;
+            border-radius: 2px 9px 9px 2px;
+        }
+
+        .back-content {
+            transform: rotateY(180deg);
+            background-position: left;
+            background-position: 0;
+            border-radius: 9px 2px 2px 9px;
+        }
+
+        .flipped .front,
+        .flipped .back {
+            transform: rotateY(-180deg);
+        }
+
+        /* Custom untuk efek buku */
+        .paper:nth-child(1) .front {
+            border: none;
+        }
+
+        .paper:nth-child(1) .front .front-content {
+            box-sizing: content-box;
+            border-right: none;
+            box-shadow: inset 2px 0 10px rgb(0, 0, 0, 0.7), inset 0 2px 4px rgba(255, 255, 255, 0.9), inset -2px 0 3px rgba(255, 255, 255, 0.3), inset 0 -2px 7px rgba(0, 0, 0, 0.473) !important;
+        }
+
+        .paper:nth-child(1) .front::before {
+            content: "";
+            position: absolute;
+            height: calc(100% - 3px);
+            width: 2px;
+            background: rgba(0, 0, 0, 0.3);
+            box-shadow: 0 0 4px rgb(255, 255, 255), 0 0 2px rgba(0, 0, 0, 1);
+            left: 12px;
+        }
+
+        .paper:last-child .back {
+            border: none;
+        }
+
+        .paper:last-child .back .back-content {
+            box-shadow: inset -7px 0 7px rgb(0, 0, 0, 0.5), inset 0 2px 3px rgba(255, 255, 255, 0.575), inset 0 -2px 7px rgba(0, 0, 0, 0.473) !important;
+            overflow: hidden;
+        }
+
+        .paper:last-child .back .back-content::before {
+            content: "";
+            position: absolute;
+            height: 100%;
+            width: 2px;
+            background: rgba(0, 0, 0, 0.2);
+            box-shadow: 0 0 4px rgb(255, 255, 255), 0 0 2px rgba(0, 0, 0, 1);
+            right: 12px;
+            z-index: 999;
+        }
+
+        /* ================== PERBAIKAN BUTTON ================== */
+        /* Button Container - FIXED POSITION */
+        .btn-container {
+            position: fixed;
+            /* Ubah dari margin-top menjadi fixed */
+            bottom: 30px;
+            /* Posisi dari bawah */
+            left: 0;
+            right: 0;
+            text-align: center;
+            transition: all 0.5s ease;
+            z-index: 100;
+            /* Pastikan di atas elemen lain */
+        }
+
+        /* Tombol Open default TAMPIL */
+        .open-btn {
+            display: block !important;
+            /* Paksa tampil */
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+
+        /* Nav default TIDAK TAMPIL */
+        .nav {
+            display: none;
+            /* Default disembunyikan */
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        /* Ketika nav perlu ditampilkan (setelah buku dibuka) */
+        .nav.show {
+            display: flex;
+        }
+
+        /* Ketika tombol open perlu disembunyikan */
+        .open-btn.hide {
+            display: none !important;
+        }
+
+        .nav button {
+            border: none;
+            background: var(--btn-color);
+            cursor: pointer;
+            height: 40px;
+            width: 40px;
+            border-radius: 50%;
+        }
+
+        button.open-btn,
+        button.pesan-btn {
+            height: 40px;
+            padding: 0 20px;
+            letter-spacing: 1px;
+            font-size: 1rem;
+            background: var(--btn-color);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: 0 auto;
+            /* Ubah dari margin: auto */
+            display: block;
+            min-width: 120px;
+        }
+
+        button {
+            border: 1px solid white;
+            box-shadow: -2px 2px 0 rgba(0, 0, 0, 0.2);
+            display: block;
+        }
+
+        button:active {
+            transform: scale(0.93);
+            box-shadow: -1px 1px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        /* Hapus aturan yang menyembunyikan button */
+        /* .btn-container .open-btn:not(.show), .btn-container .nav:not(.show) { display: none; } */
+
+        .btn-container.hide {
+            transform: translateY(50px);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .pesan-btn {
+            margin-top: 20px;
+            visibility: hidden;
+            display: none;
+        }
+
+        .pesan-btn.show {
+            visibility: visible;
+            display: block;
+            animation: fade-up 0.5s ease forwards;
+        }
+
+        @keyframes fade-up {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ================== RESPONSIF ================== */
+        /* Responsive untuk semua ukuran layar */
+        @media only screen and (max-width: 650px) {
+            .book {
+                width: 80vw;
+                max-width: 220px;
+            }
+
+            .paper {
+                perspective: 1000px;
+            }
+
+            .paper-content {
+                border-radius: 2px 5px 5px 2px;
+            }
+
+           
+            .flower {
+                width: 80px;
+            }
+
+            .btn-container {
+                bottom: 20px;
+            }
+
+            .nav {
+                gap: 15px;
+                margin-bottom: 15px;
+            }
+
+            .nav button {
+                height: 45px;
+                width: 45px;
+            }
+
+            button.open-btn,
+            button.pesan-btn {
+                height: 40px;
+                padding: 0 18px;
+                font-size: 0.95rem;
+            }
+        }
+
+        /* Untuk layar sangat kecil (mobile portrait) */
+        @media only screen and (max-width: 500px) {
+            .book {
+                width: 43vw;
+                max-width: 220px;
+            }
+
+            .paper {
+                perspective: 1000px;
+            }
+
+
+            .flower {
+                width: 70px;
+            }
+
+            .nav button {
+                height: 40px;
+                width: 40px;
+            }
+
+            button.open-btn,
+            button.pesan-btn {
+                height: 38px;
+                padding: 0 15px;
+                font-size: 0.9rem;
+                min-width: 100px;
+            }
+        }
+
+        /* Untuk tablet dan layar lebih besar */
+        @media only screen and (min-width: 768px) {
+            .book {
+                width: 60vw;
+                max-width: 280px;
+            }
+
+            .butterfly {
+                top: 25px;
+                left: 20px;
+            }
+
+
+            .flower {
+                width: 120px;
+            }
+        }
+
+        /* Untuk desktop */
+        @media only screen and (min-width: 1024px) {
+            .book {
+                width: 45vw;
+                max-width: 300px;
+            }
+        }
+
+        /* Landscape mode untuk mobile */
+        @media only screen and (max-height: 500px) and (orientation: landscape) {
+            .main {
+                flex-direction: row;
+                padding-top: 20px;
+                gap: 30px;
+            }
+
+            .book {
+                width: auto;
+                height: 85vh;
+                max-width: none;
+                max-height: calc(85vh * 540/360);
+            }
+
+            .btn-container {
+                position: relative;
+                bottom: auto;
+                margin-top: 0;
+            }
+
+            .butterfly {
+                top: 10px;
+                left: 10px;
+            }
+
+
+            .flower {
+                width: 70px;
+                bottom: 5px;
+                right: 5px;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .butterfly img {
+                width: 150px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .butterfly img {
+                width: 120px;
+            }
+
+            .butterfly {
+                top: 10px;
+                left: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="main" style="background-image: url('image/bg7.png')">
+        <div class="elements">
+            <img src="image/bg1.png" class="bg" onerror="this.style.display='none'">
+            <div class="butterfly"><img src="image/kupu2.png" width="100"
+                    onerror="this.style.display='none'"></div>
+            <img src="image/bungaMatahari.png" class="flower" onerror="this.style.display='none'">
+        </div>
+
+        <div class="book" id="book"></div>
+
+        <div class="btn-container">
+            <button class="open-btn">Open</button>
+            <div class="nav">
+                <button class="prev-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#fff"
+                        viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                            d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5" />
+                    </svg>
+                </button>
+                <button class="next-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#fff"
+                        viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                            d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8" />
+                    </svg>
+                </button>
+            </div>
+            <button class="pesan-btn">Kirim Pesan</button>
+        </div>
+    </div>
+
+    <script>
+        // --- KONFIGURASI GAMBAR (SETIAP KERTAS = 2 GAMBAR) ---
+        const konten = [
+            "image/naha.jpg",
+            "image/h3.png",
+            "image/h4.png",
+            "image/h3.png",
+            "image/h4.png",
+            "image/h3.png",
+            "image/h4.png",
+            "image/h3.png",
+            "image/h4.png",
+            "image/h3.png",
+            "image/h4.png",
+            "image/h3.png",
+            "image/h4.png",
+            "image/h4.png",
+            "image/h4.png",
+            "https://images.unsplash.com/photo-1518621736915-f3b1c41bfd00?w=400",
+           
+            "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=400"
+        ];
+
+        const musik = "audio/AkuMilikmu.mp3";
+        const musikA = new Audio(musik);
+        musikA.loop = true;
+
+        const book = document.getElementById("book");
+        const btnContainer = document.querySelector(".btn-container");
+        const openBtn = document.querySelector('.open-btn');
+        const navBtn = document.querySelector(".nav");
+        const prevBtn = document.querySelector(".prev-btn");
+        const nextBtn = document.querySelector(".next-btn");
+        const pesanBtn = document.querySelector('.pesan-btn');
+
+        // --- GENERATE HALAMAN DENGAN PERBAIKAN ---
+        for (let i = 0; i < konten.length; i += 2) {
+            const paper = document.createElement('div');
+            paper.classList.add('paper');
+
+            const frontImg = konten[i] || '';
+            const backImg = konten[i + 1] || '';
+
+            paper.innerHTML = `
+        <div class="front">
+            <div class="front-content" style="background-image:url('${frontImg}')"></div>
+        </div>
+        <div class="back">
+            <div class="back-content" style="background-image:url('${backImg}')"></div>
+        </div>
+    `;
+
+            book.appendChild(paper);
+        }
+
+        const papers = Array.from(document.querySelectorAll(".paper"));
+        const paperTotal = papers.length;
+        let currentLocation = 0;
+
+        // Set Z-Index Awal
+        let zInd = paperTotal;
+        let dataZIndex = [];
+        papers.forEach(p => {
+            p.style.zIndex = zInd;
+            dataZIndex.push(zInd);
+            zInd--;
+        });
+
+        // --- TOMBOL & NAVIGASI ---
+        let canClick = true;
+
+        openBtn.onclick = () => {
+            musikA.play().catch(e => console.log("Autoplay blocked"));
+            openBook();
+            btnContainer.classList.add("hide");
+
+            setTimeout(() => {
+                openBtn.classList.add("hide");
+                navBtn.classList.add("show");
+                btnContainer.classList.remove("hide");
+                goNextPage();
+            }, 500);
+        };
+
+        prevBtn.onclick = () => {
+            if (canClick) handleClick(false);
+        };
+        nextBtn.onclick = () => {
+            if (canClick) handleClick(true);
+        };
+
+        function handleClick(isNext) {
+            canClick = false;
+            if (isNext) goNextPage();
+            else goPrevPage();
+            setTimeout(() => {
+                canClick = true;
+            }, 500);
+        }
+
+        // --- PERBAIKAN PAPER HANDLER ---
+        function paperHandler(index) {
+            papers.forEach((paper, i) => {
+                const front = paper.querySelector('.front');
+                const back = paper.querySelector('.back');
+                const backContent = paper.querySelector('.back-content');
+
+                // Reset Default (Penting agar tidak tumpang tindih)
+                front.style.transform = "rotateY(0deg) scaleX(1)";
+                back.style.transform = "rotateY(0deg) scaleX(1)";
+                backContent.classList.remove('flipped');
+                back.style.boxShadow = "none";
+
+                if (index >= 0) {
+                    // --- SISI KIRI (HALAMAN YANG SUDAH DIBUKA) ---
+                    if (i === index) {
+                        // Halaman aktif yang paling atas di kiri (Cermin dari -30deg)
+                        front.style.transform = "rotateY(-150deg)";
+                        back.style.transform = "rotateY(-150deg)";
+                        backContent.classList.add('flipped');
+                    } else if (i === index - 1) {
+                        // Lapis kedua di kiri (Cermin dari -20deg + scaleX)
+                        front.style.transform = "rotateY(-160deg) scaleX(1.05)";
+                        back.style.transform = "rotateY(-160deg) scaleX(1.05)";
+                        backContent.classList.add('flipped');
+                    } else if (i < index - 1) {
+                        // Lapis ketiga dst di kiri (Cermin dari -10deg + scaleX)
+                        front.style.transform = "rotateY(-170deg) scaleX(1.1)";
+                        back.style.transform = "rotateY(-170deg) scaleX(1.1)";
+                        backContent.classList.add('flipped');
+                    }
+
+                    // --- SISI KANAN (HALAMAN YANG BELUM DIBUKA) ---
+                    else if (i === index + 1) {
+                        // Halaman aktif paling atas di kanan
+                        front.style.transform = "rotateY(-30deg)";
+                        back.style.transform = "rotateY(-30deg)";
+                    } else if (i === index + 2) {
+                        // Lapis kedua di kanan
+                        front.style.transform = "rotateY(-20deg) scaleX(1.05)";
+                        back.style.transform = "rotateY(-20deg) scaleX(1.05)";
+                    } else if (i > index + 2) {
+                        // Lapis ketiga dst di kanan
+                        front.style.transform = "rotateY(-10deg) scaleX(1.1)";
+                        back.style.transform = "rotateY(-10deg) scaleX(1.1)";
+                    }
+
+                    // Tambahkan Shadow hanya untuk halaman teratas agar realis
+                    if (i === index || i === index + 1) {
+                        back.style.boxShadow = "4px 4px 10px rgba(0, 0, 0, 0.2)";
+                    }
+                }
+            });
+        }
+
+        // --- NAVIGASI UTAMA DENGAN PERBAIKAN ---
+        function openBook() {
+            book.style.transform = "translateX(50%)";
+        }
+
+        function closeBook(isEnd) {
+            if (isEnd) {
+                book.style.transform = "translateX(100%)";
+            } else {
+                book.style.transform = "translateX(0%)";
+                papers.forEach(p => {
+                    p.querySelector(".front").style.transform = "rotateY(0deg)";
+                    p.querySelector(".back").style.transform = "rotateY(0deg)";
+                    p.querySelector(".back-content").style.transform = "";
+                });
+            }
+        }
+
+        function goNextPage() {
+            if (currentLocation == paperTotal - 1) {
+                pesanBtn.classList.add('show');
+            }
+
+            if (currentLocation < paperTotal) {
+                const curr = currentLocation;
+                let delay = 250;
+                if (curr == 0) delay = 300;
+                if (curr == paperTotal - 1) delay = 200;
+
+                setTimeout(() => {
+                    papers[curr].style.zIndex = curr;
+                }, delay);
+
+                paperHandler(currentLocation);
+
+                if (currentLocation == paperTotal - 1) {
+                    closeBook(true);
+                } else {
+                    openBook();
+                }
+
+                currentLocation++;
+            }
+        }
+
+        function goPrevPage() {
+            if (currentLocation > 0) {
+                currentLocation--;
+
+                const curr = currentLocation;
+                let delay = 250;
+                if (curr == 0) delay = 200;
+                if (curr == paperTotal - 1) delay = 300;
+
+                setTimeout(() => {
+                    papers[curr].style.zIndex = dataZIndex[curr];
+                }, delay);
+
+                // Panggil paperHandler dengan index yang benar
+                if (currentLocation > 0) {
+                    paperHandler(currentLocation - 1);
+                } else {
+                    // Reset semua ke posisi awal
+                    papers.forEach(p => {
+                        const front = p.querySelector(".front");
+                        const back = p.querySelector(".back");
+                        const backContent = p.querySelector(".back-content");
+
+                        front.style.transform = "rotateY(0deg)";
+                        back.style.transform = "rotateY(0deg)";
+                        backContent.classList.remove('flipped');
+                    });
+                }
+
+                if (currentLocation == 0) {
+                    closeBook(false);
+                } else {
+                    openBook();
+                }
+
+                // Sembunyikan tombol pesan jika tidak di halaman terakhir
+                if (currentLocation < paperTotal - 1) {
+                    pesanBtn.classList.remove('show');
+                }
+            }
+        }
+        // --- PESAN ---
+        pesanBtn.onclick = () => {
+            Swal.fire({
+                title: 'Tulis pesan',
+                input: 'textarea',
+                confirmButtonText: 'Kirim',
+                showCancelButton: true
+            }).then((result) => {
+                if (result.isConfirmed && result.value) {
+                    Swal.fire('Berhasil', 'Pesan terkirim!', 'success');
+                }
+            });
+        };
+
+        // --- SWIPE ---
+        let startX = 0;
+        document.addEventListener('touchstart', e => startX = e.changedTouches[0].screenX);
+        document.addEventListener('touchend', e => {
+            const endX = e.changedTouches[0].screenX;
+            if (startX - endX > 50) goNextPage();
+            if (endX - startX > 50) goPrevPage();
+        });
+    </script>
+</body>
+
+</html>

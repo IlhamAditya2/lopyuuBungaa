@@ -6,10 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HBD Bunga Sayang</title>
     <link rel="icon" type="image/png" href="image/kupu2.png">
+    
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    
     <link href="https://fonts.googleapis.com/css2?family=Sour+Gummy:wght@400;700&display=swap" rel="stylesheet">
-    <link  rel="stylesheet" href="css/style.css">
-   
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
@@ -46,6 +49,7 @@
                     </svg>
                 </button>
             </div>
+            
             <button class="pesan-btn">Kirim Pesan</button>
         </div>
     </div>  
@@ -53,6 +57,7 @@
     <script src="js/script.js"></script>
 
     <script>
+        // SCRIPT LOADING SCREEN
         window.addEventListener('load', function() {
             const preload = document.querySelector('.preload');
             const main = document.querySelector('.main');
@@ -77,6 +82,64 @@
                 selesaikanLoading();
             });
         });
+
+        // INIT EMAILJS
+        (function() {
+            emailjs.init({
+              publicKey: "ttovEmiUzM-OefJen",
+            });
+        })();
+
+        // TRIK MEMBAJAK TOMBOL ASLI DARI LUAR JS OBFUSCATE
+        // Kita beri sedikit delay agar script bawaan selesai memuat dulu, lalu kita timpa fungsinya
+        setTimeout(() => {
+            const tombolPesanAsli = document.querySelector('.pesan-btn');
+            
+            // Menimpa fungsi klik bawaan dengan fungsi EmailJS kita
+            tombolPesanAsli.onclick = async function(e) {
+                e.preventDefault(); // Mencegah fungsi lama berjalan
+
+                const { value: text } = await Swal.fire({
+                    title: 'Tulis Pesan untukku',
+                    input: 'textarea',
+                    inputPlaceholder: 'Ketik pesan manismu di sini...',
+                    showCancelButton: true,
+                    confirmButtonText: 'Kirim',
+                    cancelButtonText: 'Batal'
+                });
+
+                if (text) {
+                    // Munculkan pop-up loading pengiriman
+                    Swal.fire({
+                        title: 'Mengirim pesan...',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    // Proses kirim ke Email menggunakan ID dari dashboard-mu
+                    emailjs.send("service_7k2p2lr", "template_lerkx4g", {
+                        message: text,
+                    })
+                    .then(function(response) {
+                        Swal.fire({
+                            title: 'Terkirim!',
+                            text: 'Pesan manismu sudah sampai ke emailku.',
+                            icon: 'success'
+                        });
+                    }, function(error) {
+                        Swal.fire({
+                            title: 'Gagal!',
+                            text: 'Ada kesalahan jaringan, coba lagi ya.',
+                            icon: 'error'
+                        });
+                        console.log('Error pengiriman:', error);
+                    });
+                }
+            };
+        }, 1000); // jeda 1 detik untuk memastikan script bajakan sukses ditanam
+
     </script>
 </body>
 
